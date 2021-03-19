@@ -40,13 +40,9 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        editor.putInt("BackgroundColor", background_color);
-        editor.putInt("BallColor", ball_color);
-        editor.apply();
 
         setContentView(R.layout.activity_main);
+        gameView = findViewById(R.id.surfaceView);
         gameView.setActivity(this);
         gameView.setOnTouchListener(this);
     }
@@ -80,14 +76,12 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
 
     @Override
     protected void onStop() {
-        sensorManager.unregisterListener(this, light);
         super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, light, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -95,26 +89,6 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            float light_value = event.values[0];
-            System.out.println(light_value);
-            if ( 0 <= light_value && light_value < 5) {
-                background_color = Color.YELLOW;
-                ball_color = Color.MAGENTA;
-            } else if (5 <= light_value && light_value < 7) {
-                background_color = Color.MAGENTA;
-                ball_color = Color.GREEN;
-            } else if (7 <= light_value && light_value < 10) {
-                background_color = Color.GREEN;
-                ball_color = Color.BLUE;
-            } else {
-                background_color = Color.BLUE;
-                ball_color = Color.RED;
-            }
-            editor.putInt("BackgroundColor", background_color);
-            editor.putInt("BallColor", ball_color);
-            editor.apply();
-        }
     }
 
     public void replay(View v) {

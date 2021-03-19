@@ -70,7 +70,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
         width = this.getResources().getDisplayMetrics().widthPixels;
         height = this.getResources().getDisplayMetrics().heightPixels;
         x = width / 2;
-        y = height / 2;
+        y = height - (height / 15);
         debut = System.currentTimeMillis() / 100;
         mHandler = new Handler();
         mHandler.postDelayed(mUpdateTimeTask, 100);
@@ -102,11 +102,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
     }
 
     public void update() {
-
+        if (!isFinDujeu()) {
+                    x = (int) Math.round(x + actualSpeed * acceleration);
+            }
     }
 
     private boolean isFinDujeu() {
-        return true;
+        return false;
     }
 
 
@@ -114,9 +116,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (canvas != null) {
-            canvas.drawColor(this.background_color);
             Paint paint = new Paint();
-            paint.setColor(this.ball_color);
+            paint.setColor(Color.rgb(255,0,0));
             canvas.drawCircle(x, y, rayon,  paint);
         }
     }
@@ -150,77 +151,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
     @Override
     public void onSensorChanged(SensorEvent event) {
         float axisX = event.values[0];
-        float axisY = event.values[1];
-        switch (direction) {
-            case HAUT:
-                if (axisY > 7) {
-                    acceleration = 4;
-                } else if (axisY > 5) {
-                    acceleration = 2;
-                } else if (axisY > 3) {
-                    acceleration = 1.5;
-                } else if (axisY < -7) {
-                    acceleration = 0.7;
-                } else if (axisY < -5) {
-                    acceleration = 0.9;
-                } else if (axisY < -3) {
-                    acceleration = 0.95;
-                } else {
-                    acceleration = 1;
-                }
-                break;
-            case BAS:
-                if (axisY > 7) {
-                    acceleration = 0.7;
-                } else if (axisY > 5) {
-                    acceleration = 0.9;
-                } else if (axisY > 3) {
-                    acceleration = 0.95;
-                } else if (axisY < -7) {
-                    acceleration = 4;
-                } else if (axisY < -5) {
-                    acceleration = 2;
-                } else if (axisY < -3) {
-                    acceleration = 1.5;
-                } else {
-                    acceleration = 1;
-                }
-                break;
-            case GAUCHE:
                 if (axisX > 7) {
-                    acceleration = 4;
+                    acceleration = -6;
                 } else if (axisX > 5) {
-                    acceleration = 2;
+                    acceleration = -4;
                 } else if (axisX > 3) {
-                    acceleration = 1.5;
+                    acceleration = -2;
+                }else if (axisX > 1) {
+                    acceleration = -1;
                 } else if (axisX < -7) {
-                    acceleration = 0.7;
+                    acceleration = 6;
                 } else if (axisX < -5) {
-                    acceleration = 0.9;
-                } else if (axisX < -3) {
-                    acceleration = 0.95;
-                } else {
-                    acceleration = 1;
-                }
-                break;
-            case DROITE:
-                if (axisX > 7) {
-                    acceleration = 0.7;
-                } else if (axisX > 5) {
-                    acceleration = 0.9;
-                } else if (axisX > 3) {
-                    acceleration = 0.95;
-                } else if (axisX < -7) {
                     acceleration = 4;
-                } else if (axisX < -5) {
-                    acceleration = 2;
                 } else if (axisX < -3) {
-                    acceleration = 1.5;
-                } else {
+                    acceleration = 2;
+                }else if (axisX < -1) {
                     acceleration = 1;
+                } else {
+                    acceleration = 0;
                 }
-                break;
-        }
     }
 
     @Override
